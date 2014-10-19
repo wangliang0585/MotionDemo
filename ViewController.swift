@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import MapKit
 
-class ViewController: UIViewController,WLMotionManagerDelegate {
+class ViewController: UIViewController,WLMotionManagerDelegate,MKMapViewDelegate {
 
     private var speedLabel: UILabel!
     private var motionBtton: UIButton!
@@ -17,7 +18,7 @@ class ViewController: UIViewController,WLMotionManagerDelegate {
     private var bEnable:Bool = true
     private var isRunning:Bool = false
     private var motion:WLMotionManager!
-    
+    private var mapView:MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,6 +65,16 @@ class ViewController: UIViewController,WLMotionManagerDelegate {
         self.motionBtton.setTitle("START", forState: UIControlState.Normal)
         self.motionBtton.addTarget(self, action: "motion:", forControlEvents: UIControlEvents.TouchUpInside)
         self.view.addSubview(self.motionBtton)
+        
+        self.mapView = MKMapView(frame: CGRectMake(0, CGRectGetMaxY(self.motionBtton.frame)+10, self.view.bounds.size.width, self.view.bounds.size.height-(CGRectGetMaxY(self.motionBtton.frame)+10)))
+        self.mapView.mapType = MKMapType.Standard
+        self.mapView.showsUserLocation = true
+        self.mapView.delegate = self
+        var span:MKCoordinateSpan = MKCoordinateSpanMake(0.05, 0.05)
+        var region:MKCoordinateRegion = self.mapView.region
+        region.span = span;
+        self.mapView.region = region
+        self.view.addSubview(self.mapView)
     }
     
     func showErrorAlert(message:String){
@@ -75,9 +86,14 @@ class ViewController: UIViewController,WLMotionManagerDelegate {
         self.showErrorAlert(error.description)
     }
     
-    func motionLocationDidChange(type: MotionType, sp speed: String) {
+    func motionLocationDidChange(type: String, sp speed: String) {
         self.speedLabel.text = speed
-        println(speed)
+    }
+    func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
+        mapView.
+        myCoordinate.latitude = userLocation.coordinate.latitude;
+        
+        myCoordinate.longitude = userLocation.coordinate.longitude;
     }
 }
 

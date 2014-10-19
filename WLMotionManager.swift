@@ -24,9 +24,8 @@ enum MotionType {
 }
 
 protocol WLMotionManagerDelegate : NSObjectProtocol{
-//    func motionDidStart(motion:WLMotionManager)
     func motionDidFailed(motion:WLMotionManager,error:NSError)
-    func motionLocationDidChange(type:MotionType, sp speed:String)
+    func motionLocationDidChange(type:String, sp speed:String)
 }
 
 class WLMotionManager: NSObject,CLLocationManagerDelegate {
@@ -83,8 +82,8 @@ class WLMotionManager: NSObject,CLLocationManagerDelegate {
         self.locationManager?.stopUpdatingLocation()
         self.motionManager?.stopActivityUpdates()
         self.timer?.invalidate()
-        if (self.delegate != nil) /*&& *self.delegate!.respondsToSelector("motionLocationDidChange:sp:")*/ {
-            self.delegate!.motionLocationDidChange(self.motionType, sp: "--")
+        if (self.delegate != nil) && self.delegate!.respondsToSelector("motionLocationDidChange:sp:") {
+            self.delegate!.motionLocationDidChange("stop", sp: "--")
         }
     }
     
@@ -148,8 +147,8 @@ class WLMotionManager: NSObject,CLLocationManagerDelegate {
                 self.speed = 0
             }
             
-            if (self.delegate != nil) /*&& *self.delegate!.respondsToSelector("motionLocationDidChange:sp:")*/ {
-                self.delegate!.motionLocationDidChange(self.motionType, sp: self.calculateSpeed())
+            if (self.delegate != nil) && self.delegate!.respondsToSelector("motionLocationDidChange:sp:") {
+                self.delegate!.motionLocationDidChange("test", sp: self.calculateSpeed())
             }
 
         }
